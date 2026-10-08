@@ -29,6 +29,7 @@ Live site: [kolamcraft.netlify.app](https://kolamcraft.netlify.app/)
 - Radix UI components
 - Lucide React icons
 - Supabase JS client
+- SQLite for optional local database storage
 - jsPDF for PDF export
 
 ## Project Structure
@@ -139,6 +140,40 @@ Stop and restart the dev server after changing `.env`:
 npm run dev
 ```
 
+## Optional SQLite Setup
+
+KolamCraft now includes a local SQLite schema for a future local API/backend path. The current browser app still uses localStorage in local mode and Supabase when configured; browser-only React code cannot securely open a SQLite database file directly.
+
+Create the local SQLite file with:
+
+```bash
+npm run db:init
+```
+
+This creates:
+
+```text
+database/kolamcraft.sqlite
+```
+
+The generated database file is ignored by Git. The schema and initializer are kept in:
+
+```text
+database/schema.sql
+database/init_sqlite.py
+```
+
+SQLite uses a file path instead of a username/password. Placeholder values are available in `.env.example` for a future server/API layer:
+
+```env
+DATABASE_URL=file:./database/kolamcraft.sqlite
+DATABASE_USER=your_database_user_here
+DATABASE_PASSWORD=your_database_password_here
+DATABASE_SECRET=your_database_secret_here
+```
+
+Keep database credentials un-prefixed by `VITE_`; `VITE_` variables are exposed to the browser bundle.
+
 ## Available Scripts
 
 ```bash
@@ -152,6 +187,12 @@ npm run build
 ```
 
 Creates the production build in `dist/`.
+
+```bash
+npm run db:init
+```
+
+Creates or refreshes the local SQLite database at `database/kolamcraft.sqlite`.
 
 ## Deployment
 
